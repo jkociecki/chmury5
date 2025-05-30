@@ -34,6 +34,7 @@ body {
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-weight: 600;
 }
 
 .header p {
@@ -77,6 +78,7 @@ body {
   margin-bottom: 1.5rem;
   font-size: 1.8rem;
   color: #fff;
+  font-weight: 500;
 }
 
 .station-selector {
@@ -123,6 +125,7 @@ body {
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   min-width: 150px;
+  font-weight: 500;
 }
 
 .controls button:hover:not(:disabled) {
@@ -193,20 +196,84 @@ body {
   padding: 1rem;
   margin: 1rem 0;
   color: #ffcccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dismiss-error {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.dismiss-error:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.retry-location-btn {
+  background: linear-gradient(45deg, #2196F3, #1976D2);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.retry-location-btn:hover {
+  background: linear-gradient(45deg, #1976D2, #2196F3);
+  transform: translateY(-2px);
 }
 
 /* Current station and date-time */
-.current-station,
-.date-time {
+.current-station {
   margin: 1rem 0;
   padding: 1rem;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
 
-.date-time p {
+.playing-indicator {
+  color: #4CAF50;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.date-time-location {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.date-time,
+.location-display {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.date-time p,
+.location-display p {
   margin: 0.25rem 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 /* Info section */
@@ -237,6 +304,7 @@ body {
 .location-info h3 {
   margin-bottom: 1rem;
   color: #fff;
+  font-weight: 500;
 }
 
 .browser-details p {
@@ -262,9 +330,29 @@ body {
   background: rgba(255, 165, 0, 0.2);
   border: 1px solid rgba(255, 165, 0, 0.5);
   border-radius: 10px;
-  padding: 1rem;
+  padding: 1.5rem;
   text-align: center;
   color: #ffeb3b;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.no-consent-info button {
+  background: linear-gradient(45deg, #FF9800, #F57C00);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.no-consent-info button:hover {
+  background: linear-gradient(45deg, #F57C00, #FF9800);
+  transform: translateY(-2px);
 }
 
 /* Privacy Popup */
@@ -299,6 +387,7 @@ body {
   text-align: center;
   color: #fff;
   font-size: 1.5rem;
+  font-weight: 500;
 }
 
 .privacy-content {
@@ -322,6 +411,15 @@ body {
   border-radius: 10px;
 }
 
+.technical-details {
+  margin-top: 0.5rem;
+}
+
+.technical-details p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
 .privacy-buttons {
   display: flex;
   gap: 1rem;
@@ -330,6 +428,7 @@ body {
 }
 
 .accept-btn,
+.selective-btn,
 .decline-btn {
   padding: 1rem 2rem;
   border: none;
@@ -337,11 +436,17 @@ body {
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 150px;
+  min-width: 140px;
+  font-weight: 500;
 }
 
 .accept-btn {
   background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+}
+
+.selective-btn {
+  background: linear-gradient(45deg, #FF9800, #F57C00);
   color: white;
 }
 
@@ -351,6 +456,7 @@ body {
 }
 
 .accept-btn:hover,
+.selective-btn:hover,
 .decline-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
@@ -398,5 +504,23 @@ body {
   .radio-player {
     min-width: auto;
     width: 100%;
+  }
+  
+  .privacy-buttons {
+    flex-direction: column;
+  }
+  
+  .privacy-buttons button {
+    min-width: auto;
+  }
+  
+  .date-time-location {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) {
+  .date-time-location {
+    grid-template-columns: 1fr 1fr;
   }
 }

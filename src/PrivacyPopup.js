@@ -1,29 +1,41 @@
 import React, { useState, useEffect } from 'react';
 
-const PrivacyPopup = () => {
+const PrivacyPopup = ({ onConsentChange }) => {
   const [showPopup, setShowPopup] = useState(false);
-  const [accepted, setAccepted] = useState(false);
 
   useEffect(() => {
-    // Sprawdź czy użytkownik już zaakceptował
+    // Sprawdź czy użytkownik już podjął decyzję
     const consent = localStorage.getItem('privacy-consent');
     if (!consent) {
       setShowPopup(true);
-    } else {
-      setAccepted(true);
     }
   }, []);
 
   const handleAccept = () => {
     localStorage.setItem('privacy-consent', 'accepted');
     localStorage.setItem('privacy-consent-date', new Date().toISOString());
-    setAccepted(true);
     setShowPopup(false);
+    if (onConsentChange) {
+      onConsentChange(true);
+    }
   };
 
   const handleDecline = () => {
     localStorage.setItem('privacy-consent', 'declined');
+    localStorage.setItem('privacy-consent-date', new Date().toISOString());
     setShowPopup(false);
+    if (onConsentChange) {
+      onConsentChange(false);
+    }
+  };
+
+  const handleSelectiveAccept = () => {
+    localStorage.setItem('privacy-consent', 'selective');
+    localStorage.setItem('privacy-consent-date', new Date().toISOString());
+    setShowPopup(false);
+    if (onConsentChange) {
+      onConsentChange(false); // Tylko podstawowe funkcje
+    }
   };
 
   if (!showPopup) {
@@ -33,57 +45,64 @@ const PrivacyPopup = () => {
   return (
     <div className="privacy-popup-overlay">
       <div className="privacy-popup">
-        <h3>🔒 Polityka Prywatności i Cookies</h3>
+        <h3>Polityka Prywatności i Cookies</h3>
         <div className="privacy-content">
           <p>
-            <strong>Ta strona wykorzystuje:</strong>
+            <strong>Ta aplikacja wykorzystuje następujące technologie:</strong>
           </p>
           <ul>
-            <li>🍪 <strong>Cookies</strong> - do zapamiętania Twoich preferencji</li>
-            <li>📍 <strong>Geolokalizację</strong> - do wyświetlenia Twojej lokalizacji (opcjonalnie)</li>
-            <li>🌐 <strong>Informacje o przeglądarce</strong> - do optymalizacji działania strony</li>
+            <li><strong>Local Storage</strong> - do zapamiętania Twoich preferencji (wybrana stacja, głośność, zgody)</li>
+            <li><strong>Geolokalizacja HTML5</strong> - do określenia Twojej lokalizacji (opcjonalnie)</li>
+            <li><strong>Informacje o przeglądarce</strong> - do optymalizacji działania aplikacji</li>
           </ul>
           
           <p>
-            <strong>Dlaczego zbieramy te dane?</strong>
+            <strong>Cel zbierania danych:</strong>
           </p>
           <ul>
-            <li>Zapamiętanie wybranej stacji radiowej</li>
-            <li>Dostosowanie treści do Twojej lokalizacji</li>
-            <li>Poprawa funkcjonalności aplikacji</li>
+            <li>Zapamiętanie ostatnio wybranej stacji radiowej</li>
+            <li>Zachowanie ustawień głośności</li>
+            <li>Wyświetlenie lokalnej godziny i lokalizacji</li>
+            <li>Dostosowanie interfejsu do możliwości przeglądarki</li>
           </ul>
 
           <p>
-            <strong>Twoje prawa:</strong><br/>
-            Możesz odmówić zgody lub wycofać ją w dowolnym momencie. 
-            Dane geolokalizacyjne nie są przechowywane na serwerze.
+            <strong>Bezpieczeństwo danych:</strong><br/>
+            Wszystkie dane są przechowywane lokalnie w Twojej przeglądarce. 
+            Żadne informacje nie są wysyłane na zewnętrzne serwery, 
+            z wyjątkiem strumieni radiowych i opcjonalnego określania nazwy miasta.
           </p>
 
           <div className="privacy-details">
             <details>
               <summary><strong>Szczegóły techniczne</strong></summary>
-              <p>
-                • Cookies są przechowywane lokalnie w Twojej przeglądarce<br/>
-                • Geolokalizacja wykorzystuje HTML5 Geolocation API<br/>
-                • Informacje o przeglądarce pochodzą z navigator object<br/>
-                • Żadne dane nie są wysyłane do zewnętrznych serwerów
-              </p>
+              <div className="technical-details">
+                <p><strong>Local Storage:</strong> Przechowywanie preferencji w przeglądarce</p>
+                <p><strong>Geolocation API:</strong> HTML5 API do określenia współrzędnych</p>
+                <p><strong>Navigator Object:</strong> Informacje o przeglądarce i systemie</p>
+                <p><strong>Reverse Geocoding:</strong> Bezpłatne API do określenia nazwy miasta</p>
+                <p><strong>Strumienie radiowe:</strong> Bezpośrednie połączenia z serwerami stacji</p>
+              </div>
             </details>
           </div>
         </div>
 
         <div className="privacy-buttons">
           <button onClick={handleAccept} className="accept-btn">
-            ✅ Akceptuję wszystkie
+            Akceptuję wszystkie
+          </button>
+          <button onClick={handleSelectiveAccept} className="selective-btn">
+            Tylko niezbędne
           </button>
           <button onClick={handleDecline} className="decline-btn">
-            ❌ Odmawiam
+            Odmawiam
           </button>
         </div>
 
         <div className="privacy-footer">
           <small>
-            Zgodnie z RODO i prawem o cookies.<br/>
+            Zgodnie z RODO i prawem o prywatnościoelektronicznej.<br/>
+            Możesz zmienić swoje ustawienia w dowolnym momencie.<br/>
             Kontakt: admin@radioapp.pl
           </small>
         </div>
